@@ -1,64 +1,62 @@
-# Data Inventory
+# Data Inventory and Scene Selection
 
-## Study area
+## Event
 
-- Initial AOI: Bhote Koshi / Sindhupalchok investigation area, Nepal
-- AOI bounding box: longitude 85.80 to 86.20; latitude 27.60 to 28.20
-- Event: Nepal flood event — date under verification
-- Status: AOI and event dates are provisional discovery settings
+- **Event:** Rasuwa–Bhote Koshi flash flood
+- **Date:** 26 August 2026
+- **Primary area affected:** Upper Lhende Khola, Bhote Koshi, and downstream Trishuli corridor in central Nepal
+- **Cause:** An ice–rock avalanche in the upper Lhende Khola watershed near the Nepal–China border triggered a debris-laden flood.
+- **Primary event-source types:** Government of Nepal situation updates, NDRRMA situation reporting, hydrology assessments, and ICIMOD reporting.
 
-## Satellite and contextual datasets
+## Initial study area
 
-| Dataset | Earth Engine ID / source | Intended use | Selected date(s) | Notes |
-|---|---|---|---|---|
-| Sentinel-1 GRD | `COPERNICUS/S1_GRD` | Primary SAR flood mapping | Candidate dates pending final event verification | Use matched direction and relative orbit where possible |
-| Sentinel-2 SR Harmonized | `COPERNICUS/S2_SR_HARMONIZED` | Optical validation | Pending | Post-event low-cloud coverage unavailable in provisional window |
-| VIIRS Monthly | `NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG` | Coarse nighttime-lights disruption/damage proxy | Pending | Approximately 500 m; not building-level damage |
-| SRTM DEM | `USGS/SRTMGL1_003` | Elevation and slope masking | Static | Approximately 30 m |
+- **Initial AOI bounding box:** 85.80–86.20° E, 27.60–28.20° N
+- **Purpose:** Exploratory coverage for inspecting the Bhote Koshi / Trishuli corridor.
+- **Status:** Provisional; it will be refined into a smaller analysis corridor after visual scene inspection.
 
-## Phase 1 availability check
+## Dataset inventory
 
-### Sentinel-1
+| Dataset | Earth Engine ID / source | Spatial resolution | Intended use | Selected data |
+|---|---|---:|---|---|
+| Sentinel-1 GRD | `COPERNICUS/S1_GRD` | 10 m | Primary flood/debris-change mapping | Descending, relative orbit 19 |
+| Sentinel-2 SR Harmonized | `COPERNICUS/S2_SR_HARMONIZED` | 10–20 m | Optical validation where cloud-free | Baseline scenes available; no post-event scenes below 20% scene-level cloud cover |
+| VIIRS DNB Monthly | `NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG` | Approximately 500 m | Coarse nighttime-light disruption proxy | Date pair to be selected later |
+| SRTM DEM | `USGS/SRTMGL1_003` | Approximately 30 m | Elevation, slope, terrain masking | Static terrain layer |
 
-- Baseline window: `2026-06-01` to `2026-07-31`
-- Provisional post-event window: `2026-08-24` to `2026-09-10`
-- Baseline availability: 27 scenes across all orbits; 11 descending scenes
-- Post-event availability: 8 scenes across all orbits; 3 descending scenes
+## Sentinel-1 scene availability
 
-Promising same-track descending candidates:
+The initial availability query returned:
 
-| Relative orbit | Baseline acquisitions | Post-event acquisitions | Status |
-|---|---|---|---|
-| 19 | 2026-06-06, 2026-06-18, 2026-06-25, 2026-07-07, 2026-07-19 | 2026-08-24, 2026-09-05 | Initial candidate |
-| 121 | 2026-06-01, 2026-06-13, 2026-06-25, 2026-07-02, 2026-07-14, 2026-07-26 | 2026-08-31 | Secondary candidate |
+- **Baseline period:** 1 June–31 July 2026
+  - 27 scenes across all orbit directions
+  - 11 descending scenes
+- **Post-event search period:** 26 August–10 September 2026
+  - 8 scenes across all orbit directions
+  - 3 descending scenes
 
-Initial Sentinel-1 analysis candidate: descending pass, relative orbit 19. This is provisional pending authoritative event-date verification and visual inspection of imagery.
+## Selected Sentinel-1 geometry
 
-### Sentinel-2
+To reduce differences caused by acquisition geometry, analysis uses the same Sentinel-1 orbit configuration:
 
-- Baseline scenes satisfying the configured cloud threshold: 5
-- Post-event scenes satisfying the configured cloud threshold: 0
-- Post-event scenes with no cloud filter: 28
+- **Orbit pass:** Descending
+- **Relative orbit:** 19
+- **Baseline acquisition dates:** 6 June, 18 June, 7 July, and 19 July 2026
+- **Baseline method:** Median composite of the four selected scenes
+- **Post-event acquisition date:** 5 September 2026
 
-Interpretation: optical imagery is available but cloud contamination is substantial during the provisional post-event monsoon window. Sentinel-2 will not be used as primary post-event validation unless a suitable nearby clear acquisition is found.
+## Selection rationale
 
-### VIIRS and terrain
+The 5 September 2026 scene is the first available post-event acquisition with the selected descending relative-orbit-19 geometry after the 26 August flood. The 24 August scene was excluded because it predates the documented event.
 
-- VIIRS Monthly images available over AOI: 152
-- SRTM DEM loaded successfully.
-- Terrain slope was derived successfully using `ee.Terrain.slope()`.
+This scene is approximately 10 days after the flood. Therefore, it may underrepresent temporary open-water inundation that receded before acquisition, while still capturing potentially persistent debris, channel, and land-surface changes. The project will state this limitation clearly and test complementary imagery where appropriate.
 
-## Data management
+## Sentinel-2 availability limitation
 
-- Imagery is currently queried and processed remotely in Google Earth Engine.
-- No Sentinel-1, Sentinel-2, VIIRS, or SRTM rasters have been downloaded locally during Phase 1.
-- `data/raw/` is intentionally empty except for `.gitkeep`.
-- Later exports will be limited to selected analysis products, not the entire source image collections.
+Five baseline Sentinel-2 scenes met the project’s 20% scene-level cloud filter. No post-event Sentinel-2 scenes met that criterion, although 28 post-event scenes exist without the cloud filter. This supports the decision to use Sentinel-1 SAR as the primary flood-mapping input.
 
-## Decisions log
+## Current limitations
 
-- Event date and final AOI will be chosen only after reviewing authoritative event documentation and satellite-scene availability.
-- Sentinel-1 is the primary flood-mapping input because SAR can observe through monsoon cloud cover.
-- Prefer matched orbit direction and relative orbit number for pre/post Sentinel-1 comparison.
-- A slope mask will be considered later to reduce terrain-related flood false positives.
-- VIIRS will be used only as a coarse-scale disruption/damage proxy and never as building-level damage evidence.
+- The AOI is a broad exploratory bounding box and may include terrain not directly affected by flooding.
+- Himalayan terrain creates radar shadow and layover, which can resemble flood-related backscatter change.
+- The selected same-geometry post-event Sentinel-1 scene is 10 days after the event.
+- VIIRS monthly data is a coarse area-level proxy and must not be interpreted as building-level damage.
