@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+env/
+venv/
+ENV/
+
+# Jupyter
+.ipynb_checkpoints
+
+# Data (keep it local)
+data/*.tif
+data/*.tiff
+data/*.shp
+data/*.dbf
+data/*.cpg
+data/*.prj
+data/*.qgs
+data/*.gpkg
+data/*.geojson
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
