@@ -1,0 +1,5 @@
+location_name,latitude,longitude,impact_type,source,confidence,notes
+Rasuwagadhi,28.315,85.39,reported severe impact,Humanitarian/official situation reports,medium,Approximate point; refine if authoritative coordinates become available
+Timure,28.276,85.385,reported severe impact,Humanitarian/official situation reports,medium,Approximate settlement location
+Syabrubesi,28.17,85.335,reported severe impact,Humanitarian/official situation reports,medium,Approximate settlement location
+Upper Lhende corridor,28.34,85.36,approximate source corridor,Event reconstruction and official reports,low,Approximate reference only
